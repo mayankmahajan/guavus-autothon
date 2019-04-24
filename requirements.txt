@@ -9,3 +9,4 @@ flatten-dict
 dictdiffer==0.7.0
 allure-pytest
 pytest-dependency
+selenium
