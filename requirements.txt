@@ -1,0 +1,10 @@
+requests
+fabric < 2.0.0
+pandas
+unicodecsv
+pytest
+pytest-html
+allure-pytest
+flatten-dict
+dictdiffer==0.7.0
+
