@@ -1,11 +1,13 @@
+import os
+
 from utils.parser import ObjectRepository
-from selenium import webdriver
+
 
 class LoginPage:
     def __init__(self):
-        self.locator = ObjectRepository(file_path="/Users/praveen.garg1/Autothon/guavus-autothon/actions/parser_login.csv")
+        self.locator = ObjectRepository(file_path=os.path.join(os.getcwd(), "actions", "parser_login.csv"))
 
-    def login(self,driver):
+    def login(self, driver):
         email = self.locator.get_value("facebookemail")
         element = driver.find_element_by_id(email)
         element.send_keys("deepanshu")
