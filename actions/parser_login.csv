@@ -1,3 +1,13 @@
 name;type;value;frame
-facebookemail;id;email;framevalue1
-facebookpass;id;pass;framepass
+whoToFollowsection;xpath;//div[@class='module wtf-module js-wtf-module roaming-module has-content']//div[@class='flex-module'];none
+headingWhoToFollow;xpath;//h3[contains(text(),'Who to follow')];none
+innerSection;xpath;//div[@class='js-recommended-followers dashboard-user-recommendations flex-module-inner'];none
+person1;xpath;//body[@class='three-col logged-in user-style-stepin_forum enhanced-mini-profile ProfilePage ProfilePage--withWarning no-nav-banners supports-drag-and-drop']/div[@id='doc']/div[@id='page-outer']/div[@id='page-container']/div[@class='AppContainer']/div[@class='AppContent-main content-main u-cf']/div[@class='Grid Grid--withGutter']/div[@class='Grid-cell u-size2of3 u-lg-size3of4']/div[@class='Grid Grid--withGutter']/div[@class='Grid-cell u-size1of3']/div[@class='Grid Grid--withGutter']/div[@class='Grid-cell']/div[@class='ProfileSidebar ProfileSidebar--withRightAlignment']/div[@class='MoveableModule']/div[@class='SidebarCommonModules']/div[@class='module wtf-module js-wtf-module roaming-module has-content']/div[@class='flex-module']/div[@class='js-recommended-followers dashboard-user-recommendations flex-module-inner']/div[1];none
+fullName;xpath;//div[@class='flex-module']//div[1]//div[3]//a[1];none
+
+
+hoverDiv;xpath;//div[@id='profile-hover-container'];none
+
+
+######  data-screen-name check after hovering
+
