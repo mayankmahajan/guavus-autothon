@@ -2,6 +2,7 @@
 
 import logging.config
 import os
+import actions.globals as gbl
 
 import pytest
 from utils import global_constants
@@ -22,6 +23,11 @@ logging.config.fileConfig(global_constants.DEFAULT_LOGGING_FILE_PATH)
 OPTIONS_DICT = {}
 PREVIOUS_FAILED = None
 ITEM_LIST = []
+my_data = {'top_like_count': 0}
+
+@pytest.fixture(autouse=True)
+def populate_globals():
+    gbl.my_data = my_data
 
 
 def pytest_addoption(parser):
@@ -31,7 +37,6 @@ def pytest_addoption(parser):
                      help="Relative path (to the project root) of the file containing component attributes configs. E.g. python -m pytest --componentAttributesConfig=resources/components/component_attributes_ambari.yml")
     parser.addoption("--validationConfig",
                      help="Relative path (to the project root) of the file containing validation configs. E.g. python -m pytest --validationConfig=resources/validation/sample_validation_config.yml")
-
 
 # @pytest.fixture(scope="session", autouse=True)
 # def initialize_node_obj(request):
