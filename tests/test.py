@@ -36,7 +36,7 @@ def setup(request):
     chromeOptions.add_argument('--headless')
     chromeOptions.add_argument('--no-sandbox')
     print("initiating chrome driver")
-    driver = webdriver.Chrome(executable_path=os.path.join(os.getcwd(),"resources","chromedriver"))
+    driver = webdriver.Chrome(executable_path=os.path.join(os.getcwd(),"resources","chromedriver"), options=chromeOptions)
     request.cls.driver = driver
     driver.get("https://twitter.com/stepin_forum")
     driver.maximize_window()
