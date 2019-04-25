@@ -1,5 +1,6 @@
 import random
 
+import allure
 import pytest
 import json
 import requests
@@ -24,7 +25,7 @@ def setup(request):
     #                      ignored_exceptions=[ElementNotVisibleException, ElementNotSelectableException])
     # driver.save_screenshot("file2.png")
     print("initiating chrome driver")
-    driver = webdriver.Chrome(executable_path="/var/lib/jenkins/Seleniumgrid/chromedriver")
+    driver = webdriver.Chrome(executable_path="/Users/praveen.garg1/Downloads/chromedriver")
     request.cls.driver = driver
     driver.get("https://twitter.com/stepin_forum")
     driver.maximize_window()
@@ -39,7 +40,8 @@ class TestTwitter(object):
     def test_tweet(self):
         PeoplePageObj = PeoplePage(self.driver)
         try:
-            assert PeoplePageObj.get_header()=='You may also like'
+            with allure.step("test_title"):
+                assert PeoplePageObj.get_header()=='You may also like'
         except AssertionError as e:
             print e
         self.report['biographies'] = PeoplePageObj.get_people_info()
@@ -53,4 +55,5 @@ class TestTwitter(object):
              }
 
         r = requests.post(url, files=files)
-        assert int(r.status_code)==200
+        with allure.step("test_title"):
+            assert int(r.status_code)==200
