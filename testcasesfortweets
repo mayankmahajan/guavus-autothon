@@ -1,0 +1,6 @@
+Verify that there should be time in the every tweet
+Verify that there should be username in the every tweet
+Verify that there should be Name in the every tweet
+Verify that retweet can be empty  in the every tweet
+Verify that when user click on the hashtag it will go to the specific webpage
+Verify that when user click on the @personname then it will go that person twitter account
