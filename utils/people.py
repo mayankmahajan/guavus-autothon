@@ -15,7 +15,7 @@ locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 class PeoplePage:
     def __init__(self, driver):
-        self.locator = ObjectRepository(file_path=os.path.join(os.getcwd(), "actions", "people_handle.csv"))
+        self.locator = ObjectRepository(file_path=os.path.join(os.getcwd(), "actions", "peoples_handle.csv"))
         self.driver = driver
 
     def get_people_handle(self):
