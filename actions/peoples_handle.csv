@@ -1,0 +1,8 @@
+name;type;value;frame
+login_popup;xpath;//input[@id='search-query'];none
+user_module;xpath;//div[@class='RelatedUsers module'];none
+module_title;xpath;//h3[@class='RelatedUsers-title'];none
+innerDiv;xpath;//div[@class='RelatedUsers-users'];none
+personsClass;xpath;//div[@class='UserSmallListItem js-account-summary account-summary js-actionable-user'];none
+handletoHover;xpath;//a[@class='account-group js-recommend-link js-user-profile-link user-thumb'];none
+hovercontainer;id;profile-hover-container;none
