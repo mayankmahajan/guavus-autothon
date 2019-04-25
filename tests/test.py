@@ -38,9 +38,13 @@ def setup(request):
 
 
 class TestTwitter(object):
+    report = {}
     @pytest.mark.usefixtures("setup")
-    def test_header(self):
+    def test_people(self):
         PeoplePageObj = PeoplePage(self.driver)
-        assert PeoplePageObj.get_header()=='You may also like'
-        People_info = PeoplePageObj.get_people_info()
-        print People_info
+        try:
+            assert PeoplePageObj.get_header()=='You may also like'
+        except AssertionError as e:
+            print e
+        self.report['biographies'] = PeoplePageObj.get_people_info()
+
