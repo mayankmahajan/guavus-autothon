@@ -1,16 +1,12 @@
-import json
-import logging
 import random
 
 import pytest
-
-from actions.actions import Actions
-from utils.json_parser import JsonParser
-from utils.people import PeoplePage
-from utils.Tweet import Tweet
+import json
+import requests
 from selenium import webdriver
-from selenium.common.exceptions import ElementNotVisibleException, ElementNotSelectableException
-from selenium.webdriver.support.wait import WebDriverWait
+
+from utils.Tweet import Tweet
+from utils.people import PeoplePage
 
 chromeOptions = webdriver.ChromeOptions()
 
@@ -50,10 +46,11 @@ class TestTwitter(object):
         self.report['top_retweet_count'] = max(Tweet(self.driver).get_retweets('div[class="ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt"]'))
         self.report['top_like_count'] = max(Tweet(self.driver).get_likes('div[class="ProfileTweet-action ProfileTweet-action--favorite js-toggleState"]'))
         self.report['top_10_hashtags'] = Tweet(self.driver).get_top_n_hashtags(10, locator='p[class="TweetTextSize TweetTextSize--normal js-tweet-text tweet-text"]')
+        url = 'https://cgi-lib.berkeley.edu/ex/fup.html'
 
-        print self.report
-        # try:
-        #     assert TweetPageObj.get_header()=='You may also like'
-        # except AssertionError as e:
-        #     print e
-        # self.report['biographies'] = PeoplePageObj.get_people_info()
+        files = {
+                'json': (None, json.dumps(json.dumps(self.report)), 'application/json')
+             }
+
+        r = requests.post(url, files=files)
+        assert int(r.status_code)==200
