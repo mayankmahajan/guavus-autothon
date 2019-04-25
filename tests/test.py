@@ -73,6 +73,9 @@ class TestTwitter(object):
             with allure.step("test_header"):
                 assert PeoplePageObj.get_header() == 'You may also like'
             with allure.step("test_title"):
+                allure.attach(str(get_title(self.driver)), name="Actual_title", attachment_type=AttachmentType.TEXT)
+                allure.attach(str('STeP-IN Forum (@stepin_forum) on Twitter'), name="Expected_title",
+                              attachment_type=AttachmentType.TEXT)
                 assert get_title(self.driver) == 'STeP-IN Forum (@stepin_forum) on Twitter'
         except AssertionError as e:
             print e
