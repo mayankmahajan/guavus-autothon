@@ -54,9 +54,6 @@ def setup(request):
                          ignored_exceptions=[ElementNotVisibleException, ElementNotSelectableException])
     element = wait.until(EC.element_to_be_clickable(
         (By.XPATH, "//a[@class='js-nav js-tooltip js-dynamic-tooltip']//span[@class='Icon Icon--bird Icon--large']")))
-    with allure.step("test_title"):
-        assert get_title(driver) == 'STeP-IN Forum (@stepin_forum) on Twitter'
-
     with allure.step("test_url"):
         assert get_url(driver) == 'https://twitter.com/stepin_forum'
 
