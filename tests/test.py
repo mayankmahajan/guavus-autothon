@@ -1,5 +1,6 @@
 import json
 import os
+import platform
 import random
 
 import allure
@@ -29,14 +30,22 @@ def get_url(driver):
 def get_title(driver):
     return driver.title
 
+def __binary_location():
+    """This will work only for Darwin and Linux platforms."""
+    if platform.system() == "Darwin":
+        return "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    elif platform.system() == "Linux":
+        return "/usr/bin/google-chrome"
 
 @pytest.fixture(scope="function")
 def setup(request):
     print("initiating chrome driver")
+    chromeOptions = webdriver.ChromeOptions()
     chromeOptions.add_argument('--headless')
     chromeOptions.add_argument('--no-sandbox')
+    chromeOptions.binary_location=__binary_location()
     print("initiating chrome driver")
-    driver = webdriver.Chrome(executable_path=os.path.join(os.getcwd(),"resources","chromedriver"), options=chromeOptions)
+    driver = webdriver.Chrome(executable_path=os.path.join(os.getcwd(),"resources","chromedriver"), chrome_options=chromeOptions)
     request.cls.driver = driver
     driver.get("https://twitter.com/stepin_forum")
     driver.maximize_window()
