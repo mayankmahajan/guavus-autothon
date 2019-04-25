@@ -6,6 +6,7 @@ import random
 import allure
 import pytest
 import requests
+from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.common.exceptions import *
 from selenium.webdriver.common.by import By
@@ -103,6 +104,8 @@ class TestTwitter(object):
         files = {
             'json': (None, dict_to_json(gbl.my_data), 'application/json')
         }
+
+        allure.attach(str(gbl.my_data), name="uploaded_json", attachment_type=AttachmentType.TEXT)
         r = requests.post(url, files=files)
 
         with allure.step("test_send_file"):
