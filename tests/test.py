@@ -45,7 +45,7 @@ def setup(request):
     chromeOptions.add_argument('--no-sandbox')
     chromeOptions.binary_location=__binary_location()
     print("initiating chrome driver")
-    driver = webdriver.Chrome(executable_path=os.path.join(os.getcwd(),"resources","chromedriver"), chrome_options=chromeOptions)
+    driver = webdriver.Chrome(executable_path=os.path.join(os.getcwd(),"resources","chromedriver"), options=chromeOptions)
     request.cls.driver = driver
     driver.get("https://twitter.com/stepin_forum")
     driver.maximize_window()
