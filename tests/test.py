@@ -41,7 +41,7 @@ def setup(request):
     driver.get("https://twitter.com/stepin_forum")
     driver.maximize_window()
     driver.set_page_load_timeout(30)
-    wait = WebDriverWait(driver, 10, poll_frequency=1,
+    wait = WebDriverWait(driver, 10, poll_frequency=5,
                          ignored_exceptions=[ElementNotVisibleException, ElementNotSelectableException])
     element = wait.until(EC.element_to_be_clickable(
         (By.XPATH, "//a[@class='js-nav js-tooltip js-dynamic-tooltip']//span[@class='Icon Icon--bird Icon--large']")))
