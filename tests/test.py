@@ -1,3 +1,4 @@
+import os
 import random
 
 import allure
@@ -7,6 +8,7 @@ import requests
 from selenium import webdriver
 
 from utils.Tweet import Tweet
+from utils.parser import ObjectRepository
 from utils.people import PeoplePage
 
 chromeOptions = webdriver.ChromeOptions()
@@ -25,7 +27,7 @@ def setup(request):
     #                      ignored_exceptions=[ElementNotVisibleException, ElementNotSelectableException])
     # driver.save_screenshot("file2.png")
     print("initiating chrome driver")
-    driver = webdriver.Chrome(executable_path="/Users/praveen.garg1/Downloads/chromedriver")
+    driver = webdriver.Chrome(executable_path="/Users/anubhav.gupta/Downloads/chromedriver")
     request.cls.driver = driver
     driver.get("https://twitter.com/stepin_forum")
     driver.maximize_window()
@@ -36,6 +38,7 @@ def setup(request):
 
 class TestTwitter(object):
     report= {}
+    locator = ObjectRepository(file_path=os.path.join(os.getcwd(), "actions", "tweet.csv"))
     @pytest.mark.usefixtures("setup")
     def test_tweet(self):
         PeoplePageObj = PeoplePage(self.driver)
@@ -45,9 +48,9 @@ class TestTwitter(object):
         except AssertionError as e:
             print e
         self.report['biographies'] = PeoplePageObj.get_people_info()
-        self.report['top_retweet_count'] = max(Tweet(self.driver).get_retweets('div[class="ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt"]'))
-        self.report['top_like_count'] = max(Tweet(self.driver).get_likes('div[class="ProfileTweet-action ProfileTweet-action--favorite js-toggleState"]'))
-        self.report['top_10_hashtags'] = Tweet(self.driver).get_top_n_hashtags(10, locator='p[class="TweetTextSize TweetTextSize--normal js-tweet-text tweet-text"]')
+        self.report['top_retweet_count'] = max(Tweet(self.driver).get_retweets(self.locator.get_value('retweet')))
+        self.report['top_like_count'] = max(Tweet(self.driver).get_likes(self.locator.get_value('likes')))
+        self.report['top_10_hashtags'] = Tweet(self.driver).get_top_n_hashtags(10, locator=self.locator.get_value('hastags'))
         url = 'https://cgi-lib.berkeley.edu/ex/fup.html'
 
         files = {

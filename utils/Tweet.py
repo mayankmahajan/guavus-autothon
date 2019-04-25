@@ -1,4 +1,5 @@
 import re
+import time
 
 from selenium import webdriver
 from heapq import nlargest
@@ -13,20 +14,33 @@ class Tweet(object):
         self.hashtag = []
         self.hashtag_counts = dict()
         self.driver.implicitly_wait(10)
+        self.listElements=[]
 
-    def get_likes(self, locator):
-        self.driver.find_elements_by_css_selector(locator)
-        for elem in self.driver.find_elements_by_css_selector(locator):
+    def topfifty(self):
+        self.driver.get("https://twitter.com/stepin_forum")
+        while True:
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(5)
+            self.listElements = self.driver.find_elements_by_css_selector(
+                'div[class="ProfileTweet-actionList js-actions"]')
+            print(len(self.listElements))
+            if len(self.listElements) >= 50:
+                break
+
+    def get_likes(self):
+        for elem in self.listElements:
             try:
-             self.likes.append(int(elem.text.split('\n')[1]))
-            except Exception as e:
+             self.likes.append(int(elem.text.split('\n')[elem.text.split('\n').index('Like')+1]))
+            except Exception:
                 pass
         return self.likes
 
-    def get_retweets(self, locator):
-        self.driver.find_elements_by_css_selector(locator)
-        for elem in self.driver.find_elements_by_css_selector(locator):
-            self.retweet_count.append(int(elem.text.split('\n')[1]))
+    def get_retweets(self):
+        for elem in self.listElements:
+            try:
+             self.retweet_count.append(int(elem.text.split('\n')[elem.text.split('\n').index('Retweet')+1]))
+            except Exception:
+                pass
         return self.retweet_count
 
     def get_content(self, locator):
@@ -81,7 +95,10 @@ class Tweet(object):
         return final_list
 
 
-# obj = Tweet()
+obj = Tweet(driver = webdriver.Chrome(executable_path="/Users/anubhav.gupta/Downloads/chromedriver"))
+obj.topfifty()
+obj.get_likes()
+obj.get_retweets()
 # obj.get_retweets('div[class="ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt"]')
 # obj.get_likes('div[class="ProfileTweet-action ProfileTweet-action--favorite js-toggleState"]')
 # print obj.retweet_count
