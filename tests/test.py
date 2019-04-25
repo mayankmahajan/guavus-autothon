@@ -40,13 +40,12 @@ def __binary_location():
 @pytest.fixture(scope="function")
 def setup(request):
     print("initiating chrome driver")
-    # chromeOptions = webdriver.ChromeOptions()
+    chromeOptions = webdriver.ChromeOptions()
     chromeOptions.add_argument('--headless')
     chromeOptions.add_argument('--no-sandbox')
-    # chromeOptions.binary_location=__binary_location()
+    chromeOptions.binary_location=__binary_location()
     print("initiating chrome driver")
-    # options = chromeOptions
-    driver = webdriver.Chrome(executable_path=os.path.join(os.getcwd(),"resources","chromedriver"))
+    driver = webdriver.Chrome(executable_path=os.path.join(os.getcwd(),"resources","chromedriver"),options = chromeOptions)
     request.cls.driver = driver
     driver.get("https://twitter.com/stepin_forum")
     driver.maximize_window()
