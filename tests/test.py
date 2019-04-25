@@ -1,4 +1,5 @@
 import json
+import os
 import random
 
 import allure
@@ -16,21 +17,26 @@ from utils.people import PeoplePage
 
 chromeOptions = webdriver.ChromeOptions()
 
+
+def dict_to_json(dict):
+    return json.dumps(dict)
+
+
+def get_url(driver):
+    return driver.current_url
+
+
+def get_title(driver):
+    return driver.title
+
+
 @pytest.fixture(scope="function")
 def setup(request):
     print("initiating chrome driver")
     chromeOptions.add_argument('--headless')
     chromeOptions.add_argument('--no-sandbox')
-    # driver = webdriver.Remote(
-    #     command_executor='http://192.168.135.96:4444/wd/hub', desired_capabilities=chromeOptions.to_capabilities())
-    # driver.get("http://www.facebook.com")
-    # driver.maximize_window()
-    # driver.implicitly_wait(10)
-    # wait = WebDriverWait(driver, 10, poll_frequency=5,
-    #                      ignored_exceptions=[ElementNotVisibleException, ElementNotSelectableException])
-    # driver.save_screenshot("file2.png")
     print("initiating chrome driver")
-    driver = webdriver.Chrome(executable_path="/Users/praveen.garg1/Downloads/chromedriver")
+    driver = webdriver.Chrome(executable_path=os.path.join(os.getcwd(),"resources","chromedriver"))
     request.cls.driver = driver
     driver.get("https://twitter.com/stepin_forum")
     driver.maximize_window()
@@ -39,46 +45,50 @@ def setup(request):
                          ignored_exceptions=[ElementNotVisibleException, ElementNotSelectableException])
     element = wait.until(EC.element_to_be_clickable(
         (By.XPATH, "//a[@class='js-nav js-tooltip js-dynamic-tooltip']//span[@class='Icon Icon--bird Icon--large']")))
+    with allure.step("test_title"):
+        assert get_title(driver) == 'STeP-IN Forum (@stepin_forum) on Twitter'
+
+    with allure.step("test_url"):
+        assert get_url(driver) == 'https://twitter.com/stepin_forum'
+
     yield driver
-    driver.save_screenshot("file_" + str(random.randint(100,999))+".png")
+    driver.save_screenshot("file_" + str(random.randint(100, 999)) + ".png")
     driver.close()
 
-def dict_to_json(dict):
-    return json.dumps(dict)
 
 class TestTwitter(object):
     @pytest.mark.usefixtures("setup")
     def test_people(self):
         PeoplePageObj = PeoplePage(self.driver)
         try:
-            with allure.step("test_title"):
-                assert PeoplePageObj.get_header()=='You may also like'
+            with allure.step("test_header"):
+                assert PeoplePageObj.get_header() == 'You may also like'
         except AssertionError as e:
             print e
-        # self.report['biographies'] = PeoplePageObj.get_people_info()
-        gbl.my_data['biographies']= PeoplePageObj.get_people_info()
+        gbl.my_data['biographies'] = PeoplePageObj.get_people_info()
 
     @pytest.mark.usefixtures("setup")
     def test_retweet(self):
         TweetPageObj = Tweet(self.driver)
-        gbl.my_data['top_retweet_count'] = max(TweetPageObj.get_retweets('div[class="ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt"]'))
+        gbl.my_data['top_retweet_count'] = max(TweetPageObj.get_retweets())
 
     @pytest.mark.usefixtures("setup")
     def test_top_like(self):
         TweetPageObj = Tweet(self.driver)
-        gbl.my_data['top_like_count'] = max(TweetPageObj.get_likes('div[class="ProfileTweet-action ProfileTweet-action--favorite js-toggleState"]'))
+        gbl.my_data['top_like_count'] = max(
+            TweetPageObj.get_likes())
 
     @pytest.mark.usefixtures("setup")
     def test_top_hashtags(self):
         TweetPageObj = Tweet(self.driver)
-        gbl.my_data['top_10_hashtags'] = TweetPageObj.get_top_n_hashtags(10, locator='p[class="TweetTextSize TweetTextSize--normal js-tweet-text tweet-text"]')
+        gbl.my_data['top_10_hashtags'] = TweetPageObj.get_top_n_hashtags(10)
 
     def test_send_to_server(self):
         url = 'https://cgi-lib.berkeley.edu/ex/fup.html'
         files = {
-                'json': (None,dict_to_json(gbl.my_data), 'application/json')
-             }
+            'json': (None, dict_to_json(gbl.my_data), 'application/json')
+        }
         r = requests.post(url, files=files)
-        with allure.step("test_send_file"):
-            assert int(r.status_code)==200
 
+        with allure.step("test_send_file"):
+            assert int(r.status_code) == 200

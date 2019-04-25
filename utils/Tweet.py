@@ -1,11 +1,14 @@
+import os
 import re
-
-from selenium import webdriver
+import time
 from heapq import nlargest
+
+from utils.parser import ObjectRepository
 
 
 class Tweet(object):
-    def __init__(self,driver):
+    def __init__(self, driver):
+        self.locator = ObjectRepository(file_path=os.path.join(os.getcwd(), "actions", "tweet_handle.csv"))
         self.retweet_count = []
         self.driver = driver
         self.likes = []
@@ -13,53 +16,67 @@ class Tweet(object):
         self.hashtag = []
         self.hashtag_counts = dict()
         self.driver.implicitly_wait(10)
+        self.listElements=[]
 
-    def get_likes(self, locator):
-        self.driver.find_elements_by_css_selector(locator)
-        for elem in self.driver.find_elements_by_css_selector(locator):
+    def topfifty(self):
+        self.driver.get("https://twitter.com/stepin_forum")
+        while True:
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(5)
+            self.listElements = self.driver.find_elements_by_css_selector(
+                'div[class="ProfileTweet-actionList js-actions"]')
+            print(len(self.listElements))
+            if len(self.listElements) >= 50:
+                break
+
+    def get_likes(self):
+        self.topfifty()
+        for elem in self.listElements:
             try:
-             self.likes.append(int(elem.text.split('\n')[1]))
-            except Exception as e:
+             self.likes.append(int(elem.text.split('\n')[elem.text.split('\n').index('Like')+1]))
+            except Exception:
                 pass
         return self.likes
 
-    def get_retweets(self, locator):
-        self.driver.find_elements_by_css_selector(locator)
-        for elem in self.driver.find_elements_by_css_selector(locator):
-            self.retweet_count.append(int(elem.text.split('\n')[1]))
+    def get_retweets(self):
+        self.topfifty()
+        for elem in self.listElements:
+            try:
+             self.retweet_count.append(int(elem.text.split('\n')[elem.text.split('\n').index('Retweet')+1]))
+            except Exception:
+                pass
         return self.retweet_count
 
-    def get_content(self, locator):
-        self.driver.find_elements_by_css_selector(locator)
-        for elem in self.driver.find_elements_by_css_selector(locator):
+    def get_content(self):
+        handles = self.driver.find_elements_by_css_selector(self.locator.get_value('hashtags'))
+        for elem in handles:
             self.content.append(elem.text)
 
-    def get_hashtag(self, locator):
-        self.get_content(locator)
+    def get_hashtag(self):
+        self.get_content()
         for elem in self.content:
             self.hashtag.extend(re.findall(r"#(\w+)", elem))
 
-    def word_count(self, locator=None, restart=True):
+    def word_count(self, restart=True):
         if restart:
-            self.get_hashtag(locator)
+            self.get_hashtag()
         for word in self.hashtag:
             if word in self.hashtag_counts:
                 self.hashtag_counts[word] += 1
             else:
                 self.hashtag_counts[word] = 1
 
-    def get_top_n_likes(self, n, locator=None):
-        if locator is not None:
-            self.get_likes(locator)
+    def get_top_n_likes(self, n):
+        self.get_likes()
         Tweet.get_top_n_max_elements(self.likes, int(n))
 
-    def get_top_n_retweets(self, n, locator=None):
-        if locator is not None:
-            self.get_retweets(locator)
+    def get_top_n_retweets(self, n):
+        self.get_retweets()
         Tweet.get_top_n_max_elements(n, self.retweet_count)
 
-    def get_top_n_hashtags(self, n, locator=None):
-        self.word_count(locator, restart=True)
+    def get_top_n_hashtags(self, n):
+        self.get_hashtag()
+        self.word_count(restart=True)
         n_largest = nlargest(n, self.hashtag_counts, key=self.hashtag_counts.get)
         return n_largest
 
@@ -79,19 +96,3 @@ class Tweet(object):
             final_list.append(max1)
 
         return final_list
-
-
-# obj = Tweet()
-# obj.get_retweets('div[class="ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt"]')
-# obj.get_likes('div[class="ProfileTweet-action ProfileTweet-action--favorite js-toggleState"]')
-# print obj.retweet_count
-# print len(obj.retweet_count)
-# print obj.likes
-# print len(obj.likes)
-# obj.get_content('p[class="TweetTextSize TweetTextSize--normal js-tweet-text tweet-text"]')
-# obj.get_hashtag()
-# print obj.content
-# print obj.hashtag
-# obj.word_count('p[class="TweetTextSize TweetTextSize--normal js-tweet-text tweet-text"]tweet-text')
-# print obj.hashtag_counts
-# print obj.get_top_n_hashtags(10, 'p[class="TweetTextSize TweetTextSize--normal js-tweet-text tweet-text"]')

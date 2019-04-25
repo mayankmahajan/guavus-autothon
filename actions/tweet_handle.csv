@@ -1,0 +1,8 @@
+name;type;value;frame
+facebookemail;id;email;framevalue1
+retweet;css_selector;div[class='ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt'];none
+likes;css_selector;div[class='ProfileTweet-action ProfileTweet-action--favorite js-toggleState'];none
+hashtags;css_selector;p[class='TweetTextSize TweetTextSize--normal js-tweet-text tweet-text'];none
+singlepersontweet;css_selector;strong[class='fullname show-popup-with-id u-textTruncate'];none
+@handle;css_selector;span[class='username u-dir u-textTruncate'];none
+time;css_selector;span[class='_timestamp js-short-timestamp js-relative-timestamp'];none
