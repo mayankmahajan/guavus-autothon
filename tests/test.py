@@ -19,8 +19,8 @@ def setup(request):
     print("initiating chrome driver")
     chromeOptions.add_argument('--headless')
     chromeOptions.add_argument('--no-sandbox')
-    driver = webdriver.Remote(
-        command_executor='http://192.168.135.96:4444/wd/hub', desired_capabilities=chromeOptions.to_capabilities())
+    # driver = webdriver.Remote(
+    #     command_executor='http://192.168.135.96:4444/wd/hub', desired_capabilities=chromeOptions.to_capabilities())
     # driver.get("http://www.facebook.com")
     # driver.maximize_window()
     # driver.implicitly_wait(10)
@@ -28,7 +28,7 @@ def setup(request):
     #                      ignored_exceptions=[ElementNotVisibleException, ElementNotSelectableException])
     # driver.save_screenshot("file2.png")
     print("initiating chrome driver")
-    # driver = webdriver.Chrome(executable_path="/Users/praveen.garg1/Downloads/chromedriver")
+    driver = webdriver.Chrome(executable_path="/var/lib/jenkins/Seleniumgrid/chromedriver")
     request.cls.driver = driver
     driver.get("https://twitter.com/stepin_forum")
     driver.maximize_window()
@@ -47,9 +47,9 @@ class TestTwitter(object):
         except AssertionError as e:
             print e
         self.report['biographies'] = PeoplePageObj.get_people_info()
-        # self.report['top_retweet_count'] = max(Tweet(self.driver).get_retweets('div[class="ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt"]'))
-        # self.report['top_like_count'] = max(Tweet(self.driver).get_likes('div[class="ProfileTweet-action ProfileTweet-action--favorite js-toggleState"]'))
-        # self.report['top_10_hashtags'] = Tweet(self.driver).get_top_n_hashtags(10, locator='p[class="TweetTextSize TweetTextSize--normal js-tweet-text tweet-text"]')
+        self.report['top_retweet_count'] = max(Tweet(self.driver).get_retweets('div[class="ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt"]'))
+        self.report['top_like_count'] = max(Tweet(self.driver).get_likes('div[class="ProfileTweet-action ProfileTweet-action--favorite js-toggleState"]'))
+        self.report['top_10_hashtags'] = Tweet(self.driver).get_top_n_hashtags(10, locator='p[class="TweetTextSize TweetTextSize--normal js-tweet-text tweet-text"]')
 
         print self.report
         # try:

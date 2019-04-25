@@ -17,12 +17,17 @@ class Tweet(object):
     def get_likes(self, locator):
         self.driver.find_elements_by_css_selector(locator)
         for elem in self.driver.find_elements_by_css_selector(locator):
-            self.likes.append(int(elem.text.split('\n')[1]))
+            try:
+             self.likes.append(int(elem.text.split('\n')[1]))
+            except Exception as e:
+                pass
+        return self.likes
 
     def get_retweets(self, locator):
         self.driver.find_elements_by_css_selector(locator)
         for elem in self.driver.find_elements_by_css_selector(locator):
             self.retweet_count.append(int(elem.text.split('\n')[1]))
+        return self.retweet_count
 
     def get_content(self, locator):
         self.driver.find_elements_by_css_selector(locator)
@@ -56,7 +61,7 @@ class Tweet(object):
     def get_top_n_hashtags(self, n, locator=None):
         self.word_count(locator, restart=True)
         n_largest = nlargest(n, self.hashtag_counts, key=self.hashtag_counts.get)
-        print(n_largest)
+        return n_largest
 
 
     @staticmethod
