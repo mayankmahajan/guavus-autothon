@@ -45,7 +45,7 @@ def setup(request):
     chromeOptions.add_argument('--no-sandbox')
     chromeOptions.binary_location=__binary_location()
     print("initiating chrome driver")
-    driver = webdriver.Chrome(executable_path=os.path.join(os.getcwd(),"resources","chromedriver"),options = chromeOptions)
+    driver = webdriver.Chrome(executable_path=os.path.join(os.getcwd(),"resources","chromedriver"),options=chromeOptions)
     request.cls.driver = driver
     driver.get("https://twitter.com/stepin_forum")
     driver.maximize_window()
@@ -75,22 +75,31 @@ class TestTwitter(object):
         except AssertionError as e:
             print e
         gbl.my_data['biographies'] = PeoplePageObj.get_people_info()
+        with allure.step("number_of_people"):
+            assert len(gbl.my_data['biographies']) > 0
 
     @pytest.mark.usefixtures("setup")
     def test_retweet(self):
         TweetPageObj = Tweet(self.driver)
-        gbl.my_data['top_retweet_count'] = max(TweetPageObj.get_retweets())
+        reTweetList = TweetPageObj.get_retweets()
+        gbl.my_data['top_retweet_count'] = max(reTweetList)
+        with allure.step("number_of_retweet"):
+            assert len(reTweetList) > 0
 
     @pytest.mark.usefixtures("setup")
     def test_top_like(self):
         TweetPageObj = Tweet(self.driver)
-        gbl.my_data['top_like_count'] = max(
-            TweetPageObj.get_likes())
+        likes= TweetPageObj.get_likes()
+        gbl.my_data['top_like_count'] = max(likes)
+        with allure.step("number_of_likes"):
+            assert len(likes) > 0
 
     @pytest.mark.usefixtures("setup")
     def test_top_hashtags(self):
         TweetPageObj = Tweet(self.driver)
         gbl.my_data['top_10_hashtags'] = TweetPageObj.get_top_n_hashtags(10)
+        with allure.step("number_of_hashtags"):
+            assert len(gbl.my_data['top_10_hashtags']) > 0
 
     def test_send_to_server(self):
         url = 'https://cgi-lib.berkeley.edu/ex/fup.html'
