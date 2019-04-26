@@ -18,6 +18,8 @@ from utils.Tweet import Tweet
 from utils.people import PeoplePage
 
 chromeOptions = webdriver.ChromeOptions()
+url = os.environ["URL"]
+server_url = os.environ["Server_URL"]
 
 
 def dict_to_json(dict):
@@ -50,7 +52,7 @@ def setup(request):
     driver = webdriver.Chrome(executable_path=os.path.join(os.getcwd(), "resources", "chromedriver"),
                               options=chromeOptions)
     request.cls.driver = driver
-    driver.get("https://twitter.com/stepin_forum")
+    driver.get(url)
     driver.maximize_window()
     driver.set_page_load_timeout(30)
     wait = WebDriverWait(driver, 10, poll_frequency=5,
@@ -58,7 +60,7 @@ def setup(request):
     element = wait.until(EC.element_to_be_clickable(
         (By.XPATH, "//a[@class='js-nav js-tooltip js-dynamic-tooltip']//span[@class='Icon Icon--bird Icon--large']")))
     with allure.step("test_url"):
-        assert get_url(driver) == 'https://twitter.com/stepin_forum'
+        assert get_url(driver) == str(url)
 
     yield driver
     driver.save_screenshot("file_" + str(random.randint(100, 999)) + ".png")
@@ -85,8 +87,8 @@ class TestTwitter(object):
             assert len(gbl.my_data['biographies']) > 0
 
     @pytest.mark.usefixtures("setup")
-    def test_retweet(self):
-        TweetPageObj = Tweet(self.driver)
+    def test_top_retweet(self):
+        TweetPageObj = Tweet(self.driver, url)
         reTweetList = TweetPageObj.get_retweets()
         gbl.my_data['top_retweet_count'] = max(reTweetList)
         with allure.step("number_of_retweet"):
@@ -94,7 +96,7 @@ class TestTwitter(object):
 
     @pytest.mark.usefixtures("setup")
     def test_top_like(self):
-        TweetPageObj = Tweet(self.driver)
+        TweetPageObj = Tweet(self.driver, url)
         likes = TweetPageObj.get_likes()
         gbl.my_data['top_like_count'] = max(likes)
         with allure.step("number_of_likes"):
@@ -102,13 +104,13 @@ class TestTwitter(object):
 
     @pytest.mark.usefixtures("setup")
     def test_top_hashtags(self):
-        TweetPageObj = Tweet(self.driver)
+        TweetPageObj = Tweet(self.driver, url)
         gbl.my_data['top_10_hashtags'] = TweetPageObj.get_top_n_hashtags(10)
         with allure.step("number_of_hashtags"):
             assert len(gbl.my_data['top_10_hashtags']) > 0
 
-    def test_send_to_server(self):
-        url = 'https://cgi-lib.berkeley.edu/ex/fup.html'
+    def test_send_file_to_server(self):
+        url = str(server_url)
         files = {
             'json': (None, dict_to_json(gbl.my_data), 'application/json')
         }

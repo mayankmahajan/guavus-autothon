@@ -7,7 +7,7 @@ from utils.parser import ObjectRepository
 
 
 class Tweet(object):
-    def __init__(self, driver):
+    def __init__(self, driver, url):
         self.locator = ObjectRepository(file_path=os.path.join(os.getcwd(), "actions", "tweet_handle.csv"))
         self.retweet_count = []
         self.driver = driver
@@ -17,9 +17,10 @@ class Tweet(object):
         self.hashtag_counts = dict()
         self.driver.implicitly_wait(10)
         self.listElements=[]
+        self.url = url
 
     def topfifty(self):
-        self.driver.get("https://twitter.com/stepin_forum")
+        self.driver.get(str(self.url))
         while True:
             self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(5)
