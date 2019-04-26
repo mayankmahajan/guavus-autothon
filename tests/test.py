@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import platform
 import random
@@ -20,6 +21,7 @@ from utils.people import PeoplePage
 chromeOptions = webdriver.ChromeOptions()
 url = os.environ["URL"]
 server_url = os.environ["Server_URL"]
+logger = logging.getLogger(__name__)
 
 
 def dict_to_json(dict):
@@ -78,11 +80,14 @@ class TestTwitter(object):
                 allure.attach(str(get_title(self.driver)), name="Actual_title", attachment_type=AttachmentType.TEXT)
                 allure.attach(str('STeP-IN Forum (@stepin_forum) on Twitter'), name="Expected_title",
                               attachment_type=AttachmentType.TEXT)
+                logger.info("Actual Title: %s" % str(get_title(self.driver)))
+                logger.info("Expetced Title: %s" % str('STeP-IN Forum (@stepin_forum) on Twitter'))
                 assert get_title(self.driver) == 'STeP-IN Forum (@stepin_forum) on Twitter'
         except AssertionError as e:
             print e
 
         gbl.my_data['biographies'] = PeoplePageObj.get_people_info()
+        logger.info("People details : %s" % str(gbl.my_data['biographies']))
         with allure.step("number_of_people"):
             assert len(gbl.my_data['biographies']) > 0
 
@@ -90,7 +95,9 @@ class TestTwitter(object):
     def test_top_retweet(self):
         TweetPageObj = Tweet(self.driver, url)
         reTweetList = TweetPageObj.get_retweets()
+        logger.info("Top retweet count list: %s" % str(reTweetList))
         gbl.my_data['top_retweet_count'] = max(reTweetList)
+        logger.info("Top Retweet Count: %s" % str(gbl.my_data['top_retweet_count']))
         with allure.step("number_of_retweet"):
             assert len(reTweetList) > 0
 
@@ -98,7 +105,9 @@ class TestTwitter(object):
     def test_top_like(self):
         TweetPageObj = Tweet(self.driver, url)
         likes = TweetPageObj.get_likes()
+        logger.info("Top likes count list: %s" % str(likes))
         gbl.my_data['top_like_count'] = max(likes)
+        logger.info("Top Like Count: %s" % str(gbl.my_data['top_like_count']))
         with allure.step("number_of_likes"):
             assert len(likes) > 0
 
@@ -106,6 +115,7 @@ class TestTwitter(object):
     def test_top_hashtags(self):
         TweetPageObj = Tweet(self.driver, url)
         gbl.my_data['top_10_hashtags'] = TweetPageObj.get_top_n_hashtags(10)
+        logger.info("Top 10 HashTags: %s" % str(gbl.my_data['top_10_hashtags']))
         with allure.step("number_of_hashtags"):
             assert len(gbl.my_data['top_10_hashtags']) > 0
 
