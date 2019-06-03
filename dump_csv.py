@@ -8,7 +8,7 @@ import sys
 try: 
     json_report_path = 'target/artifacts/report.json'
 
-    csv_path = '/tmp/report.csv'
+    csv_path = 'target/artifacts/report.csv'
     csv_header = [
         'product_name',
         'component',
@@ -72,10 +72,9 @@ try:
     print"opening json for read"
     print >> sys.stderr, "opening json for read"
     with open(csv_path, 'wb') as f:
-        writer = csv.writer(f)
+        writer = csv.writer(f, delimiter=',')
         writer.writerow(csv_header)
-        line = '{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}'.format(
-            name,
+        l = [name,
             component,
             build_number,
             t,
@@ -88,9 +87,8 @@ try:
             error_v,
             coverage,
             t
-        )
-        print line
-        writer.writerow(line)
+        ]
+        writer.writerow(l)
 except:
     print "Unexpected error:", sys.exc_info()[0]
     raise
