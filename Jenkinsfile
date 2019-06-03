@@ -9,7 +9,7 @@ pipeline {
             stage ("Install required Python dependencies"){
                 steps {
                         
-                        sh "virtualenv venv --python=python2.7 && source venv/bin/activate && pip install -r requirements.txt "
+                        sh "virtualenv venv --python=python2.7 && source venv/bin/activate && pip install -r requirements.txt && deactivate"
                         
                     }
             }
@@ -17,7 +17,7 @@ pipeline {
             stage ("Sample Tests") {
                 steps {
                         
-                        sh "python -m pytest tests/test.py"
+                        sh " source venv/bin/activate && python -m pytest tests/test.py && deactivate"
                     }
             }
             
