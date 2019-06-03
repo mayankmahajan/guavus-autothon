@@ -69,7 +69,8 @@ try:
         error_v = 'NA'
         pass
 
-
+    print"opening json for read"
+    print >> sys.stderr, "opening json for read"
     with open(csv_path, 'wb') as f:
         writer = csv.writer(f)
         writer.writerow(csv_header)
@@ -92,3 +93,4 @@ try:
         writer.writerow(line)
 except:
     print "Unexpected error:", sys.exc_info()[0]
+    raise
