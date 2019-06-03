@@ -23,7 +23,7 @@ pipeline {
             
             stage('Export test results to csv') {
                 steps {
-                    sh 'python dump_csv'
+                    sh 'source venv/bin/activate &&  python dump_csv.py && deactivate'
                 } 
             }
 
