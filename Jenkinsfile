@@ -21,9 +21,9 @@ pipeline {
                     }
             }
             
-            post {
+            stage('Export test results to csv') {
                 steps {
-                    sh 'source venv/bin/activate &&  python dump_csv.py ${currentBuild.currentResult} && deactivate'
+                    sh 'source venv/bin/activate &&  python dump_csv.py && deactivate'
                 } 
             }
 
