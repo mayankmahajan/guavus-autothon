@@ -21,6 +21,11 @@ pipeline {
                     }
             }
             
+            stage('Export test results to csv') {
+                steps {
+                    sh 'python dump_csv'
+                } 
+            }
 
         }
     }
