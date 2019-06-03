@@ -19,8 +19,8 @@ from utils.Tweet import Tweet
 from utils.people import PeoplePage
 
 chromeOptions = webdriver.ChromeOptions()
-url = os.environ["URL"]
-server_url = os.environ["Server_URL"]
+url = 'https://twitter.com/stepin_forum'
+server_url = 'https://cgi-lib.berkeley.edu/ex/fup.html'
 logger = logging.getLogger(__name__)
 
 
