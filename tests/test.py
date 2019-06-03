@@ -86,10 +86,10 @@ class TestTwitter(object):
         except AssertionError as e:
             print e
 
-        gbl.my_data['biographies'] = PeoplePageObj.get_people_info()
-        logger.info("People details : %s" % str(gbl.my_data['biographies']))
-        with allure.step("number_of_people"):
-            assert len(gbl.my_data['biographies']) > 0
+        # gbl.my_data['biographies'] = PeoplePageObj.get_people_info()
+        # logger.info("People details : %s" % str(gbl.my_data['biographies']))
+        # with allure.step("number_of_people"):
+        #     assert len(gbl.my_data['biographies']) > 0
 
     @pytest.mark.usefixtures("setup")
     def test_top_retweet(self):
