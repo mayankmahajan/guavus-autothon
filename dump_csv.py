@@ -27,12 +27,12 @@ try:
 
     name = 'NA'
     component = 'NA'
-    build_number = os.environ['buildNum']
+    build_number = 'NA'
     build_status = 'NA'
     category = 'pytest'
     coverage = 'NA'
     t = datetime.datetime.now()
-    print t
+    print os.environ
 
     with open(json_report_path, "r") as read_file:
         json_data = json.load(read_file)
