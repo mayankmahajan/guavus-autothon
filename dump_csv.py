@@ -28,7 +28,7 @@ try:
     name = 'NA'
     component = 'NA'
     build_number = os.environ['BUILD_NUMBER']
-    build_status = 'NA'
+    build_status = sys.argv[1]
     category = 'pytest'
     coverage = 'NA'
     t = datetime.datetime.now()
