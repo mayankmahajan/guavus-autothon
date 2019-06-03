@@ -27,7 +27,7 @@ try:
 
     name = 'NA'
     component = 'NA'
-    build_number = 'NA'
+    build_number = os.environ['BUILD_NUMBER']
     build_status = 'NA'
     category = 'pytest'
     coverage = 'NA'
