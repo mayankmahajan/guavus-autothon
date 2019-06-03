@@ -6,7 +6,7 @@ pipeline {
     stage("Build Test"){
         
         stages {
-            stage ("Install required Python dependencies inside test docker"){
+            stage ("Install required Python dependencies"){
                 steps {
                         
                         sh "virtualenv venv --python=python2.7 && source venv/bin/activate && pip install -r requirements.txt && deactivate"
@@ -14,10 +14,9 @@ pipeline {
                     }
             }
 
-            stage ("Health Check BPL") {
+            stage ("Sample Tests") {
                 steps {
                         
-                        echo "Running pytest command for Healthcheck inside docker."
                         sh "python -m pytest tests/test.py"
                     }
             }
